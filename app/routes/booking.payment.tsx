@@ -216,7 +216,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     console.log("Booking data:", JSON.stringify(bookingData, null, 2));
 
     // Send booking data to API
-    const apiUrl = "http://localhost:3000";
+    const apiUrl = process.env.API_URL || "http://localhost:3000";
     let response;
 
     try {
