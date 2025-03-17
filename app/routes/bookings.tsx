@@ -150,7 +150,7 @@ export default function Bookings() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">My Bookings</h1>
+      <h1 className="text-3xl font-bold mb-6 text-black">My Bookings</h1>
 
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
@@ -177,10 +177,10 @@ export default function Bookings() {
               d="M19 14l-7 7m0 0l-7-7m7 7V3"
             />
           </svg>
-          <h2 className="text-xl font-semibold mb-2">No Bookings Found</h2>
-          <p className="text-gray-600 mb-6">
-            You haven't made any bookings yet.
-          </p>
+          <h2 className="text-xl font-semibold mb-2 text-black">
+            No Bookings Found
+          </h2>
+          <p className="mb-6">You haven't made any bookings yet.</p>
           <Link
             to="/flights"
             className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
@@ -220,7 +220,7 @@ export default function Bookings() {
 
               <div className="p-6">
                 <div className="mb-6">
-                  <h3 className="text-lg font-semibold mb-2">
+                  <h3 className="text-lg font-semibold mb-2 text-black">
                     Outbound Flight
                   </h3>
                   <div className="flex flex-col md:flex-row md:items-center md:justify-between">
@@ -239,7 +239,7 @@ export default function Bookings() {
                           <div className="text-xl font-bold">
                             {formatTime(booking.outbound_flight.departure_time)}
                           </div>
-                          <div className="text-sm text-gray-500">
+                          <div className="text-sm">
                             {formatDate(booking.outbound_flight.departure_time)}
                           </div>
                           <div className="text-sm font-medium">
@@ -249,14 +249,14 @@ export default function Bookings() {
 
                         <div className="flex flex-col items-center">
                           <div className="w-24 h-px bg-gray-300 my-2"></div>
-                          <div className="text-xs text-gray-500">Direct</div>
+                          <div className="text-xs">Direct</div>
                         </div>
 
                         <div className="text-center">
                           <div className="text-xl font-bold">
                             {formatTime(booking.outbound_flight.arrival_time)}
                           </div>
-                          <div className="text-sm text-gray-500">
+                          <div className="text-sm">
                             {formatDate(booking.outbound_flight.arrival_time)}
                           </div>
                           <div className="text-sm font-medium">
@@ -267,7 +267,7 @@ export default function Bookings() {
                     </div>
 
                     <div className="mt-4 md:mt-0">
-                      <span className="text-sm font-medium text-gray-600">
+                      <span className="text-sm font-medium">
                         {getCabinClassName(booking.cabin_class)}
                       </span>
                     </div>
@@ -276,7 +276,7 @@ export default function Bookings() {
 
                 {booking.return_flight && (
                   <div className="mb-6">
-                    <h3 className="text-lg font-semibold mb-2">
+                    <h3 className="text-lg font-semibold mb-2 text-black">
                       Return Flight
                     </h3>
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between">
@@ -295,7 +295,7 @@ export default function Bookings() {
                             <div className="text-xl font-bold">
                               {formatTime(booking.return_flight.departure_time)}
                             </div>
-                            <div className="text-sm text-gray-500">
+                            <div className="text-sm">
                               {formatDate(booking.return_flight.departure_time)}
                             </div>
                             <div className="text-sm font-medium">
@@ -305,14 +305,14 @@ export default function Bookings() {
 
                           <div className="flex flex-col items-center">
                             <div className="w-24 h-px bg-gray-300 my-2"></div>
-                            <div className="text-xs text-gray-500">Direct</div>
+                            <div className="text-xs">Direct</div>
                           </div>
 
                           <div className="text-center">
                             <div className="text-xl font-bold">
                               {formatTime(booking.return_flight.arrival_time)}
                             </div>
-                            <div className="text-sm text-gray-500">
+                            <div className="text-sm">
                               {formatDate(booking.return_flight.arrival_time)}
                             </div>
                             <div className="text-sm font-medium">
@@ -323,7 +323,7 @@ export default function Bookings() {
                       </div>
 
                       <div className="mt-4 md:mt-0">
-                        <span className="text-sm font-medium text-gray-600">
+                        <span className="text-sm font-medium">
                           {getCabinClassName(booking.cabin_class)}
                         </span>
                       </div>

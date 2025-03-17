@@ -75,7 +75,7 @@ export default function FlightSearch({ className = "" }: FlightSearchProps) {
             checked={tripType === "round-trip"}
             onChange={() => setTripType("round-trip")}
           />
-          <span className="ml-2 text-gray-700">Round Trip</span>
+          <span className="ml-2 text-black">Round Trip</span>
         </label>
         <label className="inline-flex items-center">
           <input
@@ -84,7 +84,7 @@ export default function FlightSearch({ className = "" }: FlightSearchProps) {
             checked={tripType === "one-way"}
             onChange={() => setTripType("one-way")}
           />
-          <span className="ml-2 text-gray-700">One Way</span>
+          <span className="ml-2 text-black">One Way</span>
         </label>
       </div>
 
@@ -94,7 +94,7 @@ export default function FlightSearch({ className = "" }: FlightSearchProps) {
           <div>
             <label
               htmlFor="origin"
-              className="block text-sm font-medium text-gray-700 mb-1"
+              className="block text-sm font-medium text-black mb-1"
             >
               From
             </label>
@@ -118,7 +118,7 @@ export default function FlightSearch({ className = "" }: FlightSearchProps) {
           <div>
             <label
               htmlFor="destination"
-              className="block text-sm font-medium text-gray-700 mb-1"
+              className="block text-sm font-medium text-black mb-1"
             >
               To
             </label>
@@ -144,19 +144,34 @@ export default function FlightSearch({ className = "" }: FlightSearchProps) {
           <div>
             <label
               htmlFor="departureDate"
-              className="block text-sm font-medium text-gray-700 mb-1"
+              className="block text-sm font-medium text-black mb-1"
             >
               Departure Date
             </label>
-            <input
-              type="date"
-              id="departureDate"
-              value={departureDate}
-              onChange={(e) => setDepartureDate(e.target.value)}
-              min={minDepartureDate}
-              required
-              className="w-full px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900"
-            />
+            <div className="relative">
+              <input
+                type="date"
+                id="departureDate"
+                value={departureDate}
+                onChange={(e) => setDepartureDate(e.target.value)}
+                min={minDepartureDate}
+                required
+                className="w-full px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900 [color-scheme:light]"
+              />
+              <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                <svg
+                  className="w-5 h-5 text-black"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+            </div>
           </div>
 
           {/* Return Date */}
@@ -164,19 +179,34 @@ export default function FlightSearch({ className = "" }: FlightSearchProps) {
             <div>
               <label
                 htmlFor="returnDate"
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className="block text-sm font-medium text-black mb-1"
               >
                 Return Date
               </label>
-              <input
-                type="date"
-                id="returnDate"
-                value={returnDate}
-                onChange={(e) => setReturnDate(e.target.value)}
-                min={minReturnDate}
-                required={tripType === "round-trip"}
-                className="w-full px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900"
-              />
+              <div className="relative">
+                <input
+                  type="date"
+                  id="returnDate"
+                  value={returnDate}
+                  onChange={(e) => setReturnDate(e.target.value)}
+                  min={minReturnDate}
+                  required={tripType === "round-trip"}
+                  className="w-full px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900 [color-scheme:light]"
+                />
+                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                  <svg
+                    className="w-5 h-5 text-black"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </div>
+              </div>
             </div>
           )}
         </div>
@@ -186,7 +216,7 @@ export default function FlightSearch({ className = "" }: FlightSearchProps) {
           <div>
             <label
               htmlFor="passengers"
-              className="block text-sm font-medium text-gray-700 mb-1"
+              className="block text-sm font-medium text-black mb-1"
             >
               Passengers
             </label>
@@ -208,7 +238,7 @@ export default function FlightSearch({ className = "" }: FlightSearchProps) {
           <div>
             <label
               htmlFor="cabinClass"
-              className="block text-sm font-medium text-gray-700 mb-1"
+              className="block text-sm font-medium text-black mb-1"
             >
               Cabin Class
             </label>

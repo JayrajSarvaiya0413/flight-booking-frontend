@@ -210,58 +210,56 @@ export default function Flights() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Flight Search Results</h1>
+      <h1 className="text-3xl font-bold mb-6 text-black">
+        Flight Search Results
+      </h1>
 
       <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-        <h2 className="text-xl font-semibold mb-4 text-gray-900">
-          Your Search
-        </h2>
+        <h2 className="text-xl font-semibold mb-4 text-black">Your Search</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           <div className="bg-blue-50 p-3 rounded-lg">
-            <span className="font-semibold mr-2 text-gray-900 block mb-1">
+            <span className="font-semibold mr-2 block mb-1 text-black">
               From:
             </span>
-            <span className="text-gray-800 text-lg">
+            <span className="text-lg text-black">
               {origin || "Not specified"}
             </span>
           </div>
           <div className="bg-blue-50 p-3 rounded-lg">
-            <span className="font-semibold mr-2 text-gray-900 block mb-1">
+            <span className="font-semibold mr-2 block mb-1 text-black">
               To:
             </span>
-            <span className="text-gray-800 text-lg">
+            <span className="text-lg text-black">
               {destination || "Not specified"}
             </span>
           </div>
           <div className="bg-blue-50 p-3 rounded-lg">
-            <span className="font-semibold mr-2 text-gray-900 block mb-1">
-              Departure:
+            <span className="font-semibold mr-2 block mb-1 text-black">
+              Date:
             </span>
-            <span className="text-gray-800 text-lg">
-              {departureDate || "Not specified"}
+            <span className="text-lg text-black">
+              {formatDate(departureDate)}
             </span>
           </div>
-          {tripType === "round-trip" && (
-            <div className="bg-blue-50 p-3 rounded-lg">
-              <span className="font-semibold mr-2 text-gray-900 block mb-1">
-                Return:
-              </span>
-              <span className="text-gray-800 text-lg">
-                {returnDate || "Not specified"}
-              </span>
-            </div>
-          )}
           <div className="bg-blue-50 p-3 rounded-lg">
-            <span className="font-semibold mr-2 text-gray-900 block mb-1">
+            <span className="font-semibold mr-2 block mb-1 text-black">
+              Return:
+            </span>
+            <span className="text-lg text-black">
+              {returnDate ? formatDate(returnDate) : "One-way"}
+            </span>
+          </div>
+          <div className="bg-blue-50 p-3 rounded-lg">
+            <span className="font-semibold mr-2 block mb-1 text-black">
               Passengers:
             </span>
-            <span className="text-gray-800 text-lg">{passengers}</span>
+            <span className="text-lg text-black">{passengers}</span>
           </div>
           <div className="bg-blue-50 p-3 rounded-lg">
-            <span className="font-semibold mr-2 text-gray-900 block mb-1">
+            <span className="font-semibold mr-2 block mb-1 text-black">
               Class:
             </span>
-            <span className="text-gray-800 text-lg">
+            <span className="text-lg text-black">
               {getCabinClassName(cabinClass)}
             </span>
           </div>
@@ -290,7 +288,7 @@ export default function Flights() {
         <div className="space-y-8">
           {/* Outbound Flights */}
           <div>
-            <h2 className="text-2xl font-bold mb-4 text-gray-900">
+            <h2 className="text-2xl font-bold mb-4 text-black">
               {origin} to {destination} - {formatDate(departureDate)}
             </h2>
 
@@ -309,10 +307,10 @@ export default function Flights() {
                     d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                   />
                 </svg>
-                <h3 className="text-xl font-semibold mb-2 text-gray-900">
+                <h3 className="text-xl font-semibold mb-2 text-black">
                   No Flights Found
                 </h3>
-                <p className="text-gray-700 mb-6">
+                <p className="text-black mb-6">
                   We couldn't find any flights matching your search criteria.
                 </p>
                 <Link
@@ -337,45 +335,43 @@ export default function Flights() {
                       <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                         <div className="flex flex-col md:flex-row md:items-center gap-4">
                           <div className="w-24 flex-shrink-0">
-                            <div className="text-lg font-semibold text-gray-900">
+                            <div className="text-lg font-semibold text-black">
                               {flight.airline}
                             </div>
-                            <div className="text-sm text-gray-600">
+                            <div className="text-sm text-black">
                               {flight.flight_number}
                             </div>
                           </div>
 
                           <div className="flex items-center gap-4">
                             <div className="text-center">
-                              <div className="text-xl font-bold text-gray-900">
+                              <div className="text-xl font-bold text-black">
                                 {formatTime(flight.departure_time)}
                               </div>
-                              <div className="text-sm text-gray-600">
+                              <div className="text-sm text-black">
                                 {formatDate(flight.departure_time)}
                               </div>
-                              <div className="text-sm font-medium text-gray-800">
+                              <div className="text-sm font-medium text-black">
                                 {flight.departure_airport}
                               </div>
                             </div>
 
                             <div className="flex flex-col items-center">
-                              <div className="text-xs text-gray-600">
+                              <div className="text-xs text-black">
                                 {formatDuration(flight.duration)}
                               </div>
                               <div className="w-24 h-px bg-gray-300 my-2"></div>
-                              <div className="text-xs text-gray-600">
-                                Direct
-                              </div>
+                              <div className="text-xs text-black">Direct</div>
                             </div>
 
                             <div className="text-center">
-                              <div className="text-xl font-bold text-gray-900">
+                              <div className="text-xl font-bold text-black">
                                 {formatTime(flight.arrival_time)}
                               </div>
-                              <div className="text-sm text-gray-600">
+                              <div className="text-sm text-black">
                                 {formatDate(flight.arrival_time)}
                               </div>
-                              <div className="text-sm font-medium text-gray-800">
+                              <div className="text-sm font-medium text-black">
                                 {flight.arrival_airport}
                               </div>
                             </div>
@@ -383,13 +379,13 @@ export default function Flights() {
                         </div>
 
                         <div className="mt-4 md:mt-0 flex flex-col items-end">
-                          <div className="text-2xl font-bold text-gray-900">
+                          <div className="text-2xl font-bold text-black">
                             ${flight.price ? flight.price.toFixed(2) : "0.00"}
                           </div>
-                          <div className="text-sm text-gray-600">
+                          <div className="text-sm text-black">
                             {getCabinClassName(cabinClass)}
                           </div>
-                          <div className="text-sm text-gray-600">
+                          <div className="text-sm text-black">
                             {flight.available_seats} seats left
                           </div>
                           <button
@@ -418,7 +414,7 @@ export default function Flights() {
           {/* Return Flights */}
           {tripType === "round-trip" && (
             <div>
-              <h2 className="text-2xl font-bold mb-4 text-gray-900">
+              <h2 className="text-2xl font-bold mb-4 text-black">
                 {destination} to {origin} - {formatDate(returnDate)}
               </h2>
 
@@ -437,10 +433,10 @@ export default function Flights() {
                       d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                     />
                   </svg>
-                  <h3 className="text-xl font-semibold mb-2 text-gray-900">
+                  <h3 className="text-xl font-semibold mb-2 text-black">
                     No Return Flights Found
                   </h3>
-                  <p className="text-gray-700 mb-6">
+                  <p className="text-black mb-6">
                     We couldn't find any return flights matching your search
                     criteria.
                   </p>
@@ -466,45 +462,43 @@ export default function Flights() {
                         <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                           <div className="flex flex-col md:flex-row md:items-center gap-4">
                             <div className="w-24 flex-shrink-0">
-                              <div className="text-lg font-semibold text-gray-900">
+                              <div className="text-lg font-semibold text-black">
                                 {flight.airline}
                               </div>
-                              <div className="text-sm text-gray-600">
+                              <div className="text-sm text-black">
                                 {flight.flight_number}
                               </div>
                             </div>
 
                             <div className="flex items-center gap-4">
                               <div className="text-center">
-                                <div className="text-xl font-bold text-gray-900">
+                                <div className="text-xl font-bold text-black">
                                   {formatTime(flight.departure_time)}
                                 </div>
-                                <div className="text-sm text-gray-600">
+                                <div className="text-sm text-black">
                                   {formatDate(flight.departure_time)}
                                 </div>
-                                <div className="text-sm font-medium text-gray-800">
+                                <div className="text-sm font-medium text-black">
                                   {flight.departure_airport}
                                 </div>
                               </div>
 
                               <div className="flex flex-col items-center">
-                                <div className="text-xs text-gray-600">
+                                <div className="text-xs text-black">
                                   {formatDuration(flight.duration)}
                                 </div>
                                 <div className="w-24 h-px bg-gray-300 my-2"></div>
-                                <div className="text-xs text-gray-600">
-                                  Direct
-                                </div>
+                                <div className="text-xs text-black">Direct</div>
                               </div>
 
                               <div className="text-center">
-                                <div className="text-xl font-bold text-gray-900">
+                                <div className="text-xl font-bold text-black">
                                   {formatTime(flight.arrival_time)}
                                 </div>
-                                <div className="text-sm text-gray-600">
+                                <div className="text-sm text-black">
                                   {formatDate(flight.arrival_time)}
                                 </div>
-                                <div className="text-sm font-medium text-gray-800">
+                                <div className="text-sm font-medium text-black">
                                   {flight.arrival_airport}
                                 </div>
                               </div>
@@ -512,13 +506,13 @@ export default function Flights() {
                           </div>
 
                           <div className="mt-4 md:mt-0 flex flex-col items-end">
-                            <div className="text-2xl font-bold text-gray-900">
+                            <div className="text-2xl font-bold text-black">
                               ${flight.price ? flight.price.toFixed(2) : "0.00"}
                             </div>
-                            <div className="text-sm text-gray-600">
+                            <div className="text-sm text-black">
                               {getCabinClassName(cabinClass)}
                             </div>
-                            <div className="text-sm text-gray-600">
+                            <div className="text-sm text-black">
                               {flight.available_seats} seats left
                             </div>
                             <button

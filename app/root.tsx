@@ -282,54 +282,6 @@ export default function App() {
                 <Outlet />
               )}
             </main>
-            <footer className="bg-gray-800 text-white py-8">
-              <div className="container mx-auto px-4">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                  <div>
-                    <h3 className="text-xl font-bold mb-4">
-                      Thena Flight Booking
-                    </h3>
-                    <p>Book your flights with ease and convenience.</p>
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold mb-4">Quick Links</h3>
-                    <ul className="space-y-2">
-                      <li>
-                        <Link to="/" className="hover:text-blue-300">
-                          Home
-                        </Link>
-                      </li>
-                      <li>
-                        <Link to="/flights" className="hover:text-blue-300">
-                          Search Flights
-                        </Link>
-                      </li>
-                      <li>
-                        <Link to="/about" className="hover:text-blue-300">
-                          About Us
-                        </Link>
-                      </li>
-                      <li>
-                        <Link to="/contact" className="hover:text-blue-300">
-                          Contact
-                        </Link>
-                      </li>
-                    </ul>
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold mb-4">Contact Us</h3>
-                    <p>Email: support@thena-flights.com</p>
-                    <p>Phone: +1 (555) 123-4567</p>
-                  </div>
-                </div>
-                <div className="border-t border-gray-700 mt-8 pt-8 text-center">
-                  <p>
-                    &copy; {new Date().getFullYear()} Thena Flight Booking. All
-                    rights reserved.
-                  </p>
-                </div>
-              </div>
-            </footer>
           </div>
         </UserContext.Provider>
         <ScrollRestoration />

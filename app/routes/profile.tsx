@@ -167,7 +167,7 @@ export default function Profile() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">My Profile</h1>
+      <h1 className="text-3xl font-bold mb-6 text-black">My Profile</h1>
 
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
@@ -287,7 +287,7 @@ export default function Profile() {
                     id="date_of_birth"
                     name="date_of_birth"
                     defaultValue={profileData?.date_of_birth || ""}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 [color-scheme:light]"
                   />
                 </div>
 
@@ -361,7 +361,9 @@ export default function Profile() {
               </div>
 
               <div className="border-t border-gray-200 pt-6">
-                <h3 className="text-lg font-semibold mb-4">Travel Documents</h3>
+                <h3 className="text-lg font-semibold mb-4 text-black">
+                  Travel Documents
+                </h3>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Passport Number */}
@@ -394,7 +396,7 @@ export default function Profile() {
                       id="passport_expiry"
                       name="passport_expiry"
                       defaultValue={profileData?.passport_expiry || ""}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 [color-scheme:light]"
                     />
                   </div>
                 </div>

@@ -280,7 +280,9 @@ export default function FlightSearchResults() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Flight Search Results</h1>
+      <h1 className="text-3xl font-bold mb-6 text-black">
+        Flight Search Results
+      </h1>
 
       <div className="bg-white rounded-lg shadow-md p-6 mb-8">
         <FlightSearch />
@@ -306,7 +308,7 @@ export default function FlightSearchResults() {
 
             {outboundFlights.length === 0 ? (
               <div className="bg-white p-6 rounded-b-lg border border-gray-200">
-                <p className="text-gray-700">
+                <p className="text-black">
                   No flights found for this route and date. Please try different
                   search criteria.
                 </p>
@@ -336,7 +338,7 @@ export default function FlightSearchResults() {
                           <div className="text-lg font-semibold">
                             {flight.airline}
                           </div>
-                          <div className="text-sm text-gray-500">
+                          <div className="text-sm text-black">
                             {flight.flight_number}
                           </div>
                         </div>
@@ -346,7 +348,7 @@ export default function FlightSearchResults() {
                             <div className="text-xl font-bold">
                               {departureInfo.time}
                             </div>
-                            <div className="text-sm text-gray-500">
+                            <div className="text-sm text-black">
                               {departureInfo.date}
                             </div>
                             <div className="text-sm font-medium">
@@ -355,18 +357,18 @@ export default function FlightSearchResults() {
                           </div>
 
                           <div className="flex flex-col items-center">
-                            <div className="text-xs text-gray-500">
+                            <div className="text-xs">
                               {formatDuration(flight.duration)}
                             </div>
                             <div className="w-24 h-px bg-gray-300 my-2"></div>
-                            <div className="text-xs text-gray-500">Direct</div>
+                            <div className="text-xs">Direct</div>
                           </div>
 
                           <div className="text-center">
                             <div className="text-xl font-bold">
                               {arrivalInfo.time}
                             </div>
-                            <div className="text-sm text-gray-500">
+                            <div className="text-sm text-black">
                               {arrivalInfo.date}
                             </div>
                             <div className="text-sm font-medium">
@@ -380,10 +382,10 @@ export default function FlightSearchResults() {
                         <div className="text-2xl font-bold text-blue-600">
                           ${price}
                         </div>
-                        <div className="text-sm text-gray-500">
+                        <div className="text-sm text-black">
                           {getCabinClassName(searchParams.cabin_class)}
                         </div>
-                        <div className="text-sm text-gray-500">
+                        <div className="text-sm text-black">
                           {flight.available_seats} seats left
                         </div>
                       </div>
@@ -407,7 +409,7 @@ export default function FlightSearchResults() {
 
               {returnFlights.length === 0 ? (
                 <div className="bg-white p-6 rounded-b-lg border border-gray-200">
-                  <p className="text-gray-700">
+                  <p className="text-black">
                     No flights found for this route and date. Please try
                     different search criteria.
                   </p>
@@ -437,7 +439,7 @@ export default function FlightSearchResults() {
                             <div className="text-lg font-semibold">
                               {flight.airline}
                             </div>
-                            <div className="text-sm text-gray-500">
+                            <div className="text-sm text-black">
                               {flight.flight_number}
                             </div>
                           </div>
@@ -447,7 +449,7 @@ export default function FlightSearchResults() {
                               <div className="text-xl font-bold">
                                 {departureInfo.time}
                               </div>
-                              <div className="text-sm text-gray-500">
+                              <div className="text-sm text-black">
                                 {departureInfo.date}
                               </div>
                               <div className="text-sm font-medium">
@@ -456,20 +458,18 @@ export default function FlightSearchResults() {
                             </div>
 
                             <div className="flex flex-col items-center">
-                              <div className="text-xs text-gray-500">
+                              <div className="text-xs">
                                 {formatDuration(flight.duration)}
                               </div>
                               <div className="w-24 h-px bg-gray-300 my-2"></div>
-                              <div className="text-xs text-gray-500">
-                                Direct
-                              </div>
+                              <div className="text-xs">Direct</div>
                             </div>
 
                             <div className="text-center">
                               <div className="text-xl font-bold">
                                 {arrivalInfo.time}
                               </div>
-                              <div className="text-sm text-gray-500">
+                              <div className="text-sm text-black">
                                 {arrivalInfo.date}
                               </div>
                               <div className="text-sm font-medium">
@@ -483,10 +483,10 @@ export default function FlightSearchResults() {
                           <div className="text-2xl font-bold text-blue-600">
                             ${price}
                           </div>
-                          <div className="text-sm text-gray-500">
+                          <div className="text-sm text-black">
                             {getCabinClassName(searchParams.cabin_class)}
                           </div>
-                          <div className="text-sm text-gray-500">
+                          <div className="text-sm text-black">
                             {flight.available_seats} seats left
                           </div>
                         </div>
@@ -502,11 +502,13 @@ export default function FlightSearchResults() {
         {/* Booking Summary */}
         <div className="lg:w-1/3">
           <div className="bg-white rounded-lg shadow-md p-6 sticky top-4">
-            <h2 className="text-xl font-bold mb-4">Booking Summary</h2>
+            <h2 className="text-xl font-bold mb-4 text-black">
+              Booking Summary
+            </h2>
 
             <div className="mb-6">
               <div className="flex justify-between mb-2">
-                <span className="text-gray-600">Passengers:</span>
+                <span>Passengers:</span>
                 <span className="font-medium">
                   {searchParams.adults} Adult
                   {searchParams.adults !== 1 ? "s" : ""}
@@ -522,7 +524,7 @@ export default function FlightSearchResults() {
               </div>
 
               <div className="flex justify-between mb-2">
-                <span className="text-gray-600">Cabin Class:</span>
+                <span>Cabin Class:</span>
                 <span className="font-medium">
                   {getCabinClassName(searchParams.cabin_class)}
                 </span>
@@ -532,7 +534,9 @@ export default function FlightSearchResults() {
 
               {selectedOutboundFlight && (
                 <div className="mb-4">
-                  <h3 className="font-semibold mb-2">Outbound Flight</h3>
+                  <h3 className="font-semibold mb-2 text-black">
+                    Outbound Flight
+                  </h3>
                   {outboundFlights.map((flight: Flight) => {
                     if (flight.id === selectedOutboundFlight) {
                       const departureInfo = formatDateTime(
@@ -553,14 +557,11 @@ export default function FlightSearchResults() {
                               )}
                             </span>
                           </div>
-                          <div className="text-gray-600">
-                            {departureInfo.time} {flight.departure_airport} →{" "}
-                            {arrivalInfo.time} {flight.arrival_airport}
+                          <div>
+                            {flight.departure_airport} ({departureInfo.time}) →{" "}
+                            {flight.arrival_airport} ({arrivalInfo.time})
                           </div>
-                          <div className="text-gray-600">
-                            {departureInfo.date} •{" "}
-                            {formatDuration(flight.duration)}
-                          </div>
+                          <div>{departureInfo.date}</div>
                         </div>
                       );
                     }
@@ -571,7 +572,9 @@ export default function FlightSearchResults() {
 
               {isRoundTrip && selectedReturnFlight && (
                 <div className="mb-4">
-                  <h3 className="font-semibold mb-2">Return Flight</h3>
+                  <h3 className="font-semibold mb-2 text-black">
+                    Return Flight
+                  </h3>
                   {returnFlights.map((flight: Flight) => {
                     if (flight.id === selectedReturnFlight) {
                       const departureInfo = formatDateTime(
@@ -592,14 +595,11 @@ export default function FlightSearchResults() {
                               )}
                             </span>
                           </div>
-                          <div className="text-gray-600">
-                            {departureInfo.time} {flight.departure_airport} →{" "}
-                            {arrivalInfo.time} {flight.arrival_airport}
+                          <div>
+                            {flight.departure_airport} ({departureInfo.time}) →{" "}
+                            {flight.arrival_airport} ({arrivalInfo.time})
                           </div>
-                          <div className="text-gray-600">
-                            {departureInfo.date} •{" "}
-                            {formatDuration(flight.duration)}
-                          </div>
+                          <div>{departureInfo.date}</div>
                         </div>
                       );
                     }
@@ -614,7 +614,7 @@ export default function FlightSearchResults() {
                   <div className="border-t border-gray-200 my-4"></div>
 
                   <div className="flex justify-between mb-2">
-                    <span className="text-gray-600">Total Price:</span>
+                    <span className="text-black">Total Price:</span>
                     <span className="text-xl font-bold text-blue-600">
                       ${calculateTotalPrice()}
                     </span>

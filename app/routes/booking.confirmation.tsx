@@ -111,10 +111,10 @@ export default function BookingConfirmation() {
                       />
                     </svg>
                   </div>
-                  <h2 className="mt-3 text-lg font-medium text-gray-900">
+                  <h2 className="mt-3 text-lg font-medium text-black">
                     Payment successful!
                   </h2>
-                  <p className="mt-1 text-sm text-gray-500">
+                  <p className="mt-1 text-sm text-black">
                     Your booking has been confirmed and a confirmation email has
                     been sent to your email address.
                   </p>
@@ -140,7 +140,7 @@ export default function BookingConfirmation() {
                         Demo Mode
                       </span>
                     </div>
-                    <p className="mt-2 text-sm text-yellow-700">
+                    <p className="mt-2 text-sm text-black">
                       This is a demonstration booking. In a real application,
                       this booking would be saved to a database and a real email
                       would be sent.
@@ -167,7 +167,7 @@ export default function BookingConfirmation() {
                       Email Confirmation Sent
                     </span>
                   </div>
-                  <p className="mt-2 text-sm text-blue-700">
+                  <p className="mt-2 text-sm text-black">
                     A detailed confirmation has been sent to{" "}
                     <strong>{bookingDetails.email}</strong> with all your
                     booking information. Please check your inbox (and spam
@@ -178,36 +178,34 @@ export default function BookingConfirmation() {
                 <div className="border-t border-gray-200 py-5">
                   <dl className="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
                     <div className="sm:col-span-1">
-                      <dt className="text-sm font-medium text-gray-500">
+                      <dt className="text-sm font-medium text-black">
                         Booking Reference
                       </dt>
-                      <dd className="mt-1 text-sm text-gray-900">
+                      <dd className="mt-1 text-sm text-black">
                         {bookingDetails.reference}
                       </dd>
                     </div>
                     <div className="sm:col-span-1">
-                      <dt className="text-sm font-medium text-gray-500">
-                        Status
-                      </dt>
-                      <dd className="mt-1 text-sm text-gray-900">
+                      <dt className="text-sm font-medium text-black">Status</dt>
+                      <dd className="mt-1 text-sm text-black">
                         <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                           {bookingDetails.status}
                         </span>
                       </dd>
                     </div>
                     <div className="sm:col-span-1">
-                      <dt className="text-sm font-medium text-gray-500">
+                      <dt className="text-sm font-medium text-black">
                         Booking Date
                       </dt>
-                      <dd className="mt-1 text-sm text-gray-900">
+                      <dd className="mt-1 text-sm text-black">
                         {bookingDetails.date}
                       </dd>
                     </div>
                     <div className="sm:col-span-1">
-                      <dt className="text-sm font-medium text-gray-500">
+                      <dt className="text-sm font-medium text-black">
                         Total Amount
                       </dt>
-                      <dd className="mt-1 text-sm text-gray-900">
+                      <dd className="mt-1 text-sm text-black">
                         ${bookingDetails.totalAmount.toFixed(2)}
                       </dd>
                     </div>
@@ -215,25 +213,23 @@ export default function BookingConfirmation() {
                 </div>
 
                 <div className="border-t border-gray-200 py-5">
-                  <h3 className="text-lg font-medium text-gray-900">
+                  <h3 className="text-lg font-medium text-black">
                     Flight Details
                   </h3>
                   <div className="mt-4 bg-gray-50 p-4 rounded-md">
                     <div className="flex justify-between items-center">
                       <div>
-                        <p className="text-sm font-medium text-gray-500">
+                        <p className="text-sm font-medium text-black">
                           Outbound Flight
                         </p>
-                        <p className="text-lg font-bold">
+                        <p className="text-lg font-bold text-black">
                           {bookingDetails.outboundFlight.airline}{" "}
                           {bookingDetails.outboundFlight.flightNumber}
                         </p>
                       </div>
                       <div className="text-right">
-                        <p className="text-sm font-medium text-gray-500">
-                          Date
-                        </p>
-                        <p className="text-sm text-gray-900">
+                        <p className="text-sm font-medium text-black">Date</p>
+                        <p className="text-sm text-black">
                           {
                             formatDateTime(
                               bookingDetails.outboundFlight.departureTime
@@ -244,13 +240,11 @@ export default function BookingConfirmation() {
                     </div>
                     <div className="mt-4 flex justify-between items-center">
                       <div>
-                        <p className="text-sm font-medium text-gray-500">
-                          From
-                        </p>
-                        <p className="text-lg font-bold">
+                        <p className="text-sm font-medium text-black">From</p>
+                        <p className="text-lg font-bold text-black">
                           {bookingDetails.outboundFlight.departureAirport}
                         </p>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-black">
                           {
                             formatDateTime(
                               bookingDetails.outboundFlight.departureTime
@@ -267,9 +261,9 @@ export default function BookingConfirmation() {
                             <div className="w-full border-t border-gray-300"></div>
                           </div>
                           <div className="relative flex justify-center">
-                            <span className="bg-gray-50 px-2 text-sm text-gray-500">
+                            <span className="bg-gray-50 px-2 text-sm text-black">
                               <svg
-                                className="h-5 w-5 text-gray-400"
+                                className="h-5 w-5 text-black"
                                 viewBox="0 0 20 20"
                                 fill="currentColor"
                               >
@@ -284,11 +278,11 @@ export default function BookingConfirmation() {
                         </div>
                       </div>
                       <div className="text-right">
-                        <p className="text-sm font-medium text-gray-500">To</p>
-                        <p className="text-lg font-bold">
+                        <p className="text-sm font-medium text-black">To</p>
+                        <p className="text-lg font-bold text-black">
                           {bookingDetails.outboundFlight.arrivalAirport}
                         </p>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-black">
                           {
                             formatDateTime(
                               bookingDetails.outboundFlight.arrivalTime
@@ -301,7 +295,7 @@ export default function BookingConfirmation() {
                 </div>
 
                 <div className="border-t border-gray-200 py-5">
-                  <h3 className="text-lg font-medium text-gray-900">
+                  <h3 className="text-lg font-medium text-black">
                     Passenger Information
                   </h3>
                   <ul className="mt-4 divide-y divide-gray-200">
@@ -309,7 +303,7 @@ export default function BookingConfirmation() {
                       (passenger: any, index: number) => (
                         <li key={index} className="py-4 flex">
                           <div className="ml-3">
-                            <p className="text-sm font-medium text-gray-900">
+                            <p className="text-sm font-medium text-black">
                               {passenger.firstName} {passenger.lastName}
                             </p>
                           </div>
@@ -323,7 +317,7 @@ export default function BookingConfirmation() {
               <div className="px-4 py-5 sm:px-6 bg-gray-50 flex justify-between">
                 <Link
                   to="/"
-                  className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                 >
                   Return to Home
                 </Link>

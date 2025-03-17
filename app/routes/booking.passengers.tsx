@@ -280,7 +280,9 @@ export default function PassengerInformation() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Passenger Information</h1>
+      <h1 className="text-3xl font-bold mb-6 text-black">
+        Passenger Information
+      </h1>
 
       <div className="bg-white rounded-lg shadow-md p-6 mb-8">
         <div className="flex flex-wrap mb-6">
@@ -308,7 +310,7 @@ export default function PassengerInformation() {
                 activePassengerIndex === index ? "block" : "hidden"
               }`}
             >
-              <h2 className="text-xl font-semibold mb-4">
+              <h2 className="text-xl font-semibold mb-4 text-black">
                 {getPassengerTypeLabel(passenger.type)} {index + 1} Details
               </h2>
 
@@ -316,7 +318,7 @@ export default function PassengerInformation() {
                 <div>
                   <label
                     htmlFor={`passenger-${index}-firstName`}
-                    className="block text-sm font-medium text-gray-700 mb-1"
+                    className="block text-sm font-medium text-black mb-1"
                   >
                     First Name*
                   </label>
@@ -343,7 +345,7 @@ export default function PassengerInformation() {
                 <div>
                   <label
                     htmlFor={`passenger-${index}-lastName`}
-                    className="block text-sm font-medium text-gray-700 mb-1"
+                    className="block text-sm font-medium text-black mb-1"
                   >
                     Last Name*
                   </label>
@@ -370,7 +372,7 @@ export default function PassengerInformation() {
                 <div>
                   <label
                     htmlFor={`passenger-${index}-dateOfBirth`}
-                    className="block text-sm font-medium text-gray-700 mb-1"
+                    className="block text-sm font-medium text-black mb-1"
                   >
                     Date of Birth*
                   </label>
@@ -386,7 +388,7 @@ export default function PassengerInformation() {
                         e.target.value
                       )
                     }
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900 ${
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900 [color-scheme:light] ${
                       errors[`passenger-${index}-dateOfBirth`]
                         ? "border-red-500"
                         : "border-gray-300"
@@ -402,7 +404,7 @@ export default function PassengerInformation() {
                 <div>
                   <label
                     htmlFor={`passenger-${index}-nationality`}
-                    className="block text-sm font-medium text-gray-700 mb-1"
+                    className="block text-sm font-medium text-black mb-1"
                   >
                     Nationality*
                   </label>
@@ -433,7 +435,7 @@ export default function PassengerInformation() {
                 <div>
                   <label
                     htmlFor={`passenger-${index}-passportNumber`}
-                    className="block text-sm font-medium text-gray-700 mb-1"
+                    className="block text-sm font-medium text-black mb-1"
                   >
                     Passport Number*
                   </label>
@@ -464,7 +466,7 @@ export default function PassengerInformation() {
                 <div>
                   <label
                     htmlFor={`passenger-${index}-passportExpiry`}
-                    className="block text-sm font-medium text-gray-700 mb-1"
+                    className="block text-sm font-medium text-black mb-1"
                   >
                     Passport Expiry Date*
                   </label>
@@ -480,7 +482,7 @@ export default function PassengerInformation() {
                         e.target.value
                       )
                     }
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900 ${
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900 [color-scheme:light] ${
                       errors[`passenger-${index}-passportExpiry`]
                         ? "border-red-500"
                         : "border-gray-300"
@@ -496,7 +498,7 @@ export default function PassengerInformation() {
                 <div className="md:col-span-2">
                   <label
                     htmlFor={`passenger-${index}-specialRequests`}
-                    className="block text-sm font-medium text-gray-700 mb-1"
+                    className="block text-sm font-medium text-black mb-1"
                   >
                     Special Requests (Optional)
                   </label>
@@ -547,8 +549,10 @@ export default function PassengerInformation() {
               activePassengerIndex === passengers.length - 1 ? "mt-8" : "hidden"
             }
           >
-            <h2 className="text-xl font-semibold mb-4">Contact Information</h2>
-            <p className="text-gray-600 mb-4">
+            <h2 className="text-xl font-semibold mb-4 text-black">
+              Contact Information
+            </h2>
+            <p className="text-black mb-4">
               Please provide contact details for booking confirmation and
               updates.
             </p>
@@ -557,7 +561,7 @@ export default function PassengerInformation() {
               <div>
                 <label
                   htmlFor="contactEmail"
-                  className="block text-sm font-medium text-gray-700 mb-1"
+                  className="block text-sm font-medium text-black mb-1"
                 >
                   Email Address*
                 </label>
@@ -580,7 +584,7 @@ export default function PassengerInformation() {
               <div>
                 <label
                   htmlFor="contactPhone"
-                  className="block text-sm font-medium text-gray-700 mb-1"
+                  className="block text-sm font-medium text-black mb-1"
                 >
                   Phone Number*
                 </label>

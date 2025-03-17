@@ -636,7 +636,9 @@ export default function BookingPayment() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Complete Your Booking</h1>
+      <h1 className="text-3xl font-bold mb-6 text-black">
+        Complete Your Booking
+      </h1>
 
       {/* Show server errors */}
       {serverError && (
@@ -721,14 +723,14 @@ export default function BookingPayment() {
 
       <Form method="post" className="bg-white rounded-lg shadow-md p-6">
         <div className="mb-6">
-          <h2 className="text-xl font-semibold mb-4 text-gray-800">
+          <h2 className="text-xl font-semibold mb-4 text-black">
             Passenger Information
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label
                 htmlFor="firstName"
-                className="block text-gray-700 font-medium mb-2"
+                className="block font-medium mb-2 text-black"
               >
                 First Name
               </label>
@@ -737,14 +739,14 @@ export default function BookingPayment() {
                 id="firstName"
                 name="firstName"
                 defaultValue="John"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-black"
                 required
               />
             </div>
             <div>
               <label
                 htmlFor="lastName"
-                className="block text-gray-700 font-medium mb-2"
+                className="block font-medium mb-2 text-black"
               >
                 Last Name
               </label>
@@ -753,14 +755,14 @@ export default function BookingPayment() {
                 id="lastName"
                 name="lastName"
                 defaultValue="Doe"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-black"
                 required
               />
             </div>
             <div>
               <label
                 htmlFor="email"
-                className="block text-gray-700 font-medium mb-2"
+                className="block font-medium mb-2 text-black"
               >
                 Email
               </label>
@@ -769,23 +771,23 @@ export default function BookingPayment() {
                 id="email"
                 name="email"
                 defaultValue={emailValue || "user@example.com"}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-black"
                 required
               />
             </div>
             <div>
               <label
                 htmlFor="phone"
-                className="block text-gray-700 font-medium mb-2"
+                className="block font-medium mb-2 text-black"
               >
-                Phone Number
+                Phone
               </label>
               <input
                 type="tel"
                 id="phone"
                 name="phone"
                 defaultValue={phoneValue || "1234567890"}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-black"
                 required
               />
             </div>
@@ -793,14 +795,14 @@ export default function BookingPayment() {
         </div>
 
         <div className="mb-6">
-          <h2 className="text-xl font-semibold mb-4 text-gray-800">
+          <h2 className="text-xl font-semibold mb-4 text-black">
             Payment Information
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="md:col-span-2">
               <label
                 htmlFor="cardNumber"
-                className="block text-gray-700 font-medium mb-2"
+                className="block font-medium mb-2 text-black"
               >
                 Card Number
               </label>
@@ -809,15 +811,15 @@ export default function BookingPayment() {
                 id="cardNumber"
                 name="cardNumber"
                 defaultValue="4242 4242 4242 4242"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-black"
                 placeholder="1234 5678 9012 3456"
                 required
               />
             </div>
             <div className="md:col-span-2">
               <label
-                htmlFor="cardName"
-                className="block text-gray-700 font-medium mb-2"
+                htmlFor="cardHolderName"
+                className="block font-medium mb-2 text-black"
               >
                 Cardholder Name
               </label>
@@ -826,23 +828,23 @@ export default function BookingPayment() {
                 id="cardName"
                 name="cardName"
                 defaultValue="John Doe"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-black"
                 required
               />
             </div>
             <div>
               <label
                 htmlFor="expiryDate"
-                className="block text-gray-700 font-medium mb-2"
+                className="block font-medium mb-2 text-black"
               >
-                Expiry Date
+                Expiry Date (MM/YY)
               </label>
               <input
                 type="text"
                 id="expiryDate"
                 name="expiryDate"
                 defaultValue="12/25"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-black"
                 placeholder="MM/YY"
                 required
               />
@@ -850,7 +852,7 @@ export default function BookingPayment() {
             <div>
               <label
                 htmlFor="cvv"
-                className="block text-gray-700 font-medium mb-2"
+                className="block font-medium mb-2 text-black"
               >
                 CVV
               </label>
@@ -859,7 +861,7 @@ export default function BookingPayment() {
                 id="cvv"
                 name="cvv"
                 defaultValue="123"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-black"
                 placeholder="123"
                 required
               />
