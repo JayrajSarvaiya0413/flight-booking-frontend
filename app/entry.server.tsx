@@ -11,13 +11,7 @@ import { isbot } from "isbot";
 import { renderToPipeableStream } from "react-dom/server";
 
 // Disable singleFetch for actions to fix the turbo-stream error on Vercel
-export const singleFetch = {
-  loader: true,
-  action: false,
-};
-
-// Set a longer stream timeout to prevent premature timeouts
-export const streamTimeout = 10000;
+export const singleFetch = false;
 
 const ABORT_DELAY = 5000;
 
