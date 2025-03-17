@@ -47,17 +47,17 @@ type ActionData =
   | { success: false; error: string; message?: never };
 
 export async function action({ request }: ActionFunctionArgs) {
-  const formData = await request.formData();
-  const action = formData.get("action") as string;
-
-  // Get Supabase credentials from environment variables
-  const supabaseUrl = process.env.SUPABASE_URL || "";
-  const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || "";
-
-  // Create Supabase client
-  const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
   try {
+    const formData = await request.formData();
+    const action = formData.get("action") as string;
+
+    // Get Supabase credentials from environment variables
+    const supabaseUrl = process.env.SUPABASE_URL || "";
+    const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || "";
+
+    // Create Supabase client
+    const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
     if (action === "login") {
       const email = formData.get("email") as string;
       const password = formData.get("password") as string;
@@ -179,6 +179,7 @@ export async function action({ request }: ActionFunctionArgs) {
       error: "Invalid action",
     });
   } catch (error) {
+    console.error("Auth action error:", error);
     return json<ActionData>({
       success: false,
       error: "An error occurred. Please try again.",
@@ -199,6 +200,8 @@ export default function Auth() {
   const [verificationStatus, setVerificationStatus] = useState<string | null>(
     null
   );
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   useEffect(() => {
     // Check for verification parameter in URL
@@ -217,8 +220,83 @@ export default function Auth() {
     }
   }, [user, navigate]);
 
+  useEffect(() => {
+    if (actionData) {
+      if (actionData.success) {
+        setSuccess(actionData.message);
+        setError(null);
+
+        // If login was successful, redirect to home
+        if (authMode === "login" && actionData.success) {
+          setTimeout(() => {
+            navigate("/");
+          }, 1000);
+        }
+      } else {
+        setError(actionData.error);
+        setSuccess(null);
+      }
+    }
+  }, [actionData, navigate, authMode]);
+
   const toggleAuthMode = (mode: "login" | "register" | "forgot-password") => {
     setAuthMode(mode);
+    setError(null);
+    setSuccess(null);
+  };
+
+  // Handle form submission manually to avoid turbo-stream errors
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    setSuccess(null);
+
+    try {
+      const form = e.currentTarget;
+      const formData = new FormData(form);
+
+      const response = await fetch("/auth", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setSuccess(data.message);
+
+        // If login was successful, redirect to home after Supabase session is established
+        if (authMode === "login") {
+          const email = formData.get("email") as string;
+          const password = formData.get("password") as string;
+
+          // Create a client-side Supabase client
+          const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+          // Sign in with Supabase directly
+          const { error } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+          });
+
+          if (!error) {
+            setTimeout(() => {
+              navigate("/");
+            }, 1000);
+          } else {
+            setError("Error establishing session. Please try again.");
+          }
+        }
+      } else {
+        setError(data.error);
+      }
+    } catch (err) {
+      console.error("Form submission error:", err);
+      setError("An unexpected error occurred. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -249,162 +327,196 @@ export default function Auth() {
                 Sign in
               </button>
             )}
-            {authMode === "forgot-password" && (
-              <button
-                onClick={() => toggleAuthMode("login")}
-                className="font-medium text-blue-600 hover:text-blue-500"
-              >
-                Back to sign in
-              </button>
-            )}
           </p>
         </div>
 
+        {/* Display verification status if available */}
         {verificationStatus && (
-          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
-            {verificationStatus}
-          </div>
-        )}
-
-        {actionData?.success && (
-          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
-            {actionData.message}
-          </div>
-        )}
-
-        {actionData?.success === false && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-            {actionData.error}
-          </div>
-        )}
-
-        {/* Debug information for email verification */}
-        {actionData?.success && actionData.emailConfirmation && (
-          <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-md">
-            <h3 className="text-sm font-medium text-blue-800">
-              Email Verification Information
-            </h3>
-            <p className="text-sm text-blue-700 mt-1">
-              A verification email has been sent to your email address. Please
-              check your inbox and spam folder.
-            </p>
-            <p className="text-sm text-blue-700 mt-1">
-              If you don't receive the email within a few minutes, you can try
-              registering again or contact support.
-            </p>
-            <div className="mt-2 p-2 bg-blue-100 rounded text-xs text-blue-800">
-              <p>Verification URL: {window.location.origin}/verify</p>
-              <p>
-                Make sure your Supabase project has email verification enabled
-                in the Authentication settings.
-              </p>
-              <p>
-                Check that your Supabase project has a valid email provider
-                configured.
-              </p>
-            </div>
-
-            {/* Troubleshooting section */}
-            <div className="mt-4 border-t border-blue-200 pt-4">
-              <h4 className="text-sm font-medium text-blue-800">
-                Having trouble with verification?
-              </h4>
-              <p className="text-xs text-blue-700 mt-1">
-                If you're not receiving the verification email, you can:
-              </p>
-              <ul className="list-disc list-inside text-xs text-blue-700 mt-1">
-                <li>Check your spam/junk folder</li>
-                <li>Make sure you entered the correct email address</li>
-                <li>
-                  Try using a different email provider (Gmail, Outlook, etc.)
-                </li>
-                <li>
-                  <Link to="/verify" className="underline">
-                    Go to the verification page
-                  </Link>{" "}
-                  and enter your verification token manually
-                </li>
-              </ul>
-
-              {actionData.confirmationToken && (
-                <div className="mt-2 p-2 bg-yellow-50 border border-yellow-200 rounded">
-                  <p className="text-xs font-medium text-yellow-800">
-                    If you can't access your email, you can use this temporary
-                    verification code:
-                  </p>
-                  <code className="block mt-1 p-1 bg-white text-xs font-mono overflow-auto">
-                    {actionData.confirmationToken}
-                  </code>
-                  <p className="text-xs text-yellow-700 mt-1">
-                    Note: This is for development purposes only and should not
-                    be used in production.
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        <Form method="post" className="mt-8 space-y-6">
-          <input type="hidden" name="action" value={authMode} />
-
-          <div className="rounded-md shadow-sm -space-y-px">
-            <div>
-              <label htmlFor="email" className="sr-only">
-                Email address
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 bg-white rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Email address"
-              />
-            </div>
-
-            {authMode !== "forgot-password" && (
-              <div>
-                <label htmlFor="password" className="sr-only">
-                  Password
-                </label>
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete={
-                    authMode === "login" ? "current-password" : "new-password"
-                  }
-                  required
-                  className={`appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 bg-white ${
-                    authMode === "register" ? "" : "rounded-b-md"
-                  } focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm`}
-                  placeholder="Password"
-                />
+          <div className="rounded-md bg-green-50 p-4">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <svg
+                  className="h-5 w-5 text-green-400"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clipRule="evenodd"
+                  />
+                </svg>
               </div>
+              <div className="ml-3">
+                <p className="text-sm font-medium text-green-800">
+                  {verificationStatus}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Display success message if available */}
+        {success && (
+          <div className="rounded-md bg-green-50 p-4">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <svg
+                  className="h-5 w-5 text-green-400"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+              <div className="ml-3">
+                <p className="text-sm font-medium text-green-800">{success}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Display error message if available */}
+        {error && (
+          <div className="rounded-md bg-red-50 p-4">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <svg
+                  className="h-5 w-5 text-red-400"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </div>
+              <div className="ml-3">
+                <p className="text-sm font-medium text-red-800">{error}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Use regular form instead of Remix Form to avoid turbo-stream errors */}
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          <input type="hidden" name="action" value={authMode} />
+          <div className="rounded-md shadow-sm -space-y-px">
+            {/* Login Form */}
+            {authMode === "login" && (
+              <>
+                <div>
+                  <label htmlFor="email-address" className="sr-only">
+                    Email address
+                  </label>
+                  <input
+                    id="email-address"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    required
+                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                    placeholder="Email address"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="password" className="sr-only">
+                    Password
+                  </label>
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    autoComplete="current-password"
+                    required
+                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                    placeholder="Password"
+                  />
+                </div>
+              </>
             )}
 
+            {/* Register Form */}
             {authMode === "register" && (
+              <>
+                <div>
+                  <label htmlFor="email-address" className="sr-only">
+                    Email address
+                  </label>
+                  <input
+                    id="email-address"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    required
+                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                    placeholder="Email address"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="password" className="sr-only">
+                    Password
+                  </label>
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    autoComplete="new-password"
+                    required
+                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                    placeholder="Password"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="confirm-password" className="sr-only">
+                    Confirm Password
+                  </label>
+                  <input
+                    id="confirm-password"
+                    name="confirmPassword"
+                    type="password"
+                    autoComplete="new-password"
+                    required
+                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                    placeholder="Confirm Password"
+                  />
+                </div>
+              </>
+            )}
+
+            {/* Forgot Password Form */}
+            {authMode === "forgot-password" && (
               <div>
-                <label htmlFor="confirmPassword" className="sr-only">
-                  Confirm Password
+                <label htmlFor="email-address" className="sr-only">
+                  Email address
                 </label>
                 <input
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  type="password"
-                  autoComplete="new-password"
+                  id="email-address"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
                   required
-                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 bg-white rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                  placeholder="Confirm Password"
+                  className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
+                  placeholder="Email address"
                 />
               </div>
             )}
           </div>
 
           {authMode === "login" && (
-            <div className="flex items-center justify-end">
+            <div className="flex items-center justify-between">
               <div className="text-sm">
                 <button
                   type="button"
@@ -417,11 +529,29 @@ export default function Auth() {
             </div>
           )}
 
+          {authMode === "forgot-password" && (
+            <div className="flex items-center justify-between">
+              <div className="text-sm">
+                <button
+                  type="button"
+                  onClick={() => toggleAuthMode("login")}
+                  className="font-medium text-blue-600 hover:text-blue-500"
+                >
+                  Back to login
+                </button>
+              </div>
+            </div>
+          )}
+
           <div>
             <button
               type="submit"
               disabled={loading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white ${
+                loading
+                  ? "bg-blue-400 cursor-not-allowed"
+                  : "bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              }`}
             >
               {loading ? (
                 <span className="absolute left-0 inset-y-0 flex items-center pl-3">
@@ -468,7 +598,29 @@ export default function Auth() {
               {authMode === "forgot-password" && "Reset Password"}
             </button>
           </div>
-        </Form>
+        </form>
+
+        <div className="mt-6">
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-300"></div>
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-gray-50 text-gray-500">
+                Or continue with
+              </span>
+            </div>
+          </div>
+
+          <div className="mt-6 grid grid-cols-1 gap-3">
+            <Link
+              to="/"
+              className="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+            >
+              Continue as Guest
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   );
