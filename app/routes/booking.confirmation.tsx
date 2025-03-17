@@ -40,7 +40,7 @@ export default function BookingConfirmation() {
           departureTime: new Date().toISOString(),
           arrivalTime: new Date(Date.now() + 6 * 60 * 60 * 1000).toISOString(),
         },
-        passengers: [{ firstName: "John", lastName: "Doe" }],
+        passengers: [{ firstName: "Jayraj", lastName: "Sarvaiya" }],
         totalAmount: 499.99,
       });
     }, 1000);

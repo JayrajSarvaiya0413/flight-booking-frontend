@@ -1,5 +1,10 @@
 import { useState, useEffect } from "react";
-import { useSearchParams, Link, useLoaderData } from "@remix-run/react";
+import {
+  useSearchParams,
+  Link,
+  useLoaderData,
+  useNavigate,
+} from "@remix-run/react";
 import { json, LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import FlightSearch from "~/components/FlightSearch";
 
@@ -17,13 +22,20 @@ type Flight = {
   id: string;
   airline: string;
   flight_number: string;
-  departure_airport: string;
-  arrival_airport: string;
+  source: string;
+  destination: string;
   departure_time: string;
   arrival_time: string;
   duration: number;
-  price: number;
-  available_seats: number;
+  aircraft_type: string;
+  status: string;
+  cabinClasses: {
+    id: string;
+    class_type: string;
+    price: string | number;
+    total_seats: number;
+    available_seats: number;
+  }[];
 };
 
 type LoaderData = {
@@ -127,37 +139,44 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 export default function FlightSearchResults() {
   const { searchParams, outboundFlights, returnFlights, error } =
     useLoaderData<typeof loader>();
-  const [searchParamsState] = useSearchParams();
-
   const [selectedOutboundFlight, setSelectedOutboundFlight] = useState<
     string | null
   >(null);
   const [selectedReturnFlight, setSelectedReturnFlight] = useState<
     string | null
   >(null);
+  const [searchParamsState, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   const isRoundTrip = searchParams.trip_type === "round_trip";
   const totalPassengers =
     searchParams.adults + searchParams.children + searchParams.infants;
 
   // Format price based on cabin class
-  const formatPrice = (basePrice: number, cabinClass: string) => {
-    let multiplier = 1;
-    switch (cabinClass) {
-      case "premium_economy":
-        multiplier = 1.5;
-        break;
-      case "business":
-        multiplier = 2.5;
-        break;
-      case "first":
-        multiplier = 4;
-        break;
-      default:
-        multiplier = 1;
-    }
+  const formatPrice = (flight: Flight, cabinClass: string) => {
+    // Find the matching cabin class
+    const cabinClassData = flight.cabinClasses?.find(
+      (c) => c.class_type.toLowerCase() === cabinClass.toLowerCase()
+    );
 
-    return (basePrice * multiplier * totalPassengers).toFixed(2);
+    if (!cabinClassData) return "0.00";
+
+    // Convert price to number if it's a string
+    const basePrice =
+      typeof cabinClassData.price === "string"
+        ? parseFloat(cabinClassData.price)
+        : cabinClassData.price;
+
+    return (basePrice * totalPassengers).toFixed(2);
+  };
+
+  // Helper function to get available seats for a flight and cabin class
+  const getAvailableSeats = (flight: Flight, cabinClass: string) => {
+    const cabinClassData = flight.cabinClasses?.find(
+      (c) => c.class_type.toLowerCase() === cabinClass.toLowerCase()
+    );
+
+    return cabinClassData?.available_seats || 0;
   };
 
   // Format duration from minutes to hours and minutes
@@ -214,22 +233,22 @@ export default function FlightSearchResults() {
 
     if (selectedOutboundFlight) {
       const outboundFlight = outboundFlights.find(
-        (f: Flight) => f.id === selectedOutboundFlight
+        (flight) => flight.id === selectedOutboundFlight
       );
       if (outboundFlight) {
         total += parseFloat(
-          formatPrice(outboundFlight.price, searchParams.cabin_class)
+          formatPrice(outboundFlight, searchParams.cabin_class)
         );
       }
     }
 
     if (isRoundTrip && selectedReturnFlight) {
       const returnFlight = returnFlights.find(
-        (f: Flight) => f.id === selectedReturnFlight
+        (flight) => flight.id === selectedReturnFlight
       );
       if (returnFlight) {
         total += parseFloat(
-          formatPrice(returnFlight.price, searchParams.cabin_class)
+          formatPrice(returnFlight, searchParams.cabin_class)
         );
       }
     }
@@ -238,28 +257,11 @@ export default function FlightSearchResults() {
   };
 
   // Check if booking can proceed
-  const canProceedToBooking = () => {
+  const canProceed = () => {
     if (isRoundTrip) {
       return selectedOutboundFlight && selectedReturnFlight;
     }
     return selectedOutboundFlight;
-  };
-
-  // Generate booking URL with selected flights
-  const getBookingUrl = () => {
-    const params = new URLSearchParams();
-    params.append("outbound_flight", selectedOutboundFlight || "");
-
-    if (isRoundTrip && selectedReturnFlight) {
-      params.append("return_flight", selectedReturnFlight);
-    }
-
-    params.append("adults", searchParams.adults.toString());
-    params.append("children", searchParams.children.toString());
-    params.append("infants", searchParams.infants.toString());
-    params.append("cabin_class", searchParams.cabin_class);
-
-    return `/booking/passengers?${params.toString()}`;
   };
 
   // Cabin class display name
@@ -276,6 +278,38 @@ export default function FlightSearchResults() {
       default:
         return cabinClass;
     }
+  };
+
+  const handleBooking = () => {
+    if (!selectedOutboundFlight) return;
+
+    const outboundFlight = outboundFlights.find(
+      (flight) => flight.id === selectedOutboundFlight
+    );
+
+    let returnFlight = null;
+    if (isRoundTrip && selectedReturnFlight) {
+      returnFlight = returnFlights.find(
+        (flight) => flight.id === selectedReturnFlight
+      );
+    }
+
+    if (!outboundFlight) return;
+
+    const bookingParams = new URLSearchParams();
+    bookingParams.append("outbound_flight_id", outboundFlight.id);
+
+    if (returnFlight) {
+      bookingParams.append("return_flight_id", returnFlight.id);
+    }
+
+    bookingParams.append("cabin_class", searchParams.cabin_class);
+    bookingParams.append("adults", searchParams.adults.toString());
+    bookingParams.append("children", searchParams.children.toString());
+    bookingParams.append("infants", searchParams.infants.toString());
+    bookingParams.append("total_price", calculateTotalPrice());
+
+    navigate(`/booking/passengers?${bookingParams.toString()}`);
   };
 
   return (
@@ -318,10 +352,7 @@ export default function FlightSearchResults() {
                 {outboundFlights.map((flight: Flight) => {
                   const departureInfo = formatDateTime(flight.departure_time);
                   const arrivalInfo = formatDateTime(flight.arrival_time);
-                  const price = formatPrice(
-                    flight.price,
-                    searchParams.cabin_class
-                  );
+                  const price = formatPrice(flight, searchParams.cabin_class);
 
                   return (
                     <div
@@ -352,7 +383,7 @@ export default function FlightSearchResults() {
                               {departureInfo.date}
                             </div>
                             <div className="text-sm font-medium">
-                              {flight.departure_airport}
+                              {flight.source}
                             </div>
                           </div>
 
@@ -372,7 +403,7 @@ export default function FlightSearchResults() {
                               {arrivalInfo.date}
                             </div>
                             <div className="text-sm font-medium">
-                              {flight.arrival_airport}
+                              {flight.destination}
                             </div>
                           </div>
                         </div>
@@ -386,7 +417,8 @@ export default function FlightSearchResults() {
                           {getCabinClassName(searchParams.cabin_class)}
                         </div>
                         <div className="text-sm text-black">
-                          {flight.available_seats} seats left
+                          {getAvailableSeats(flight, searchParams.cabin_class)}{" "}
+                          seats left
                         </div>
                       </div>
                     </div>
@@ -419,10 +451,7 @@ export default function FlightSearchResults() {
                   {returnFlights.map((flight: Flight) => {
                     const departureInfo = formatDateTime(flight.departure_time);
                     const arrivalInfo = formatDateTime(flight.arrival_time);
-                    const price = formatPrice(
-                      flight.price,
-                      searchParams.cabin_class
-                    );
+                    const price = formatPrice(flight, searchParams.cabin_class);
 
                     return (
                       <div
@@ -453,7 +482,7 @@ export default function FlightSearchResults() {
                                 {departureInfo.date}
                               </div>
                               <div className="text-sm font-medium">
-                                {flight.departure_airport}
+                                {flight.source}
                               </div>
                             </div>
 
@@ -473,7 +502,7 @@ export default function FlightSearchResults() {
                                 {arrivalInfo.date}
                               </div>
                               <div className="text-sm font-medium">
-                                {flight.arrival_airport}
+                                {flight.destination}
                               </div>
                             </div>
                           </div>
@@ -487,7 +516,11 @@ export default function FlightSearchResults() {
                             {getCabinClassName(searchParams.cabin_class)}
                           </div>
                           <div className="text-sm text-black">
-                            {flight.available_seats} seats left
+                            {getAvailableSeats(
+                              flight,
+                              searchParams.cabin_class
+                            )}{" "}
+                            seats left
                           </div>
                         </div>
                       </div>
@@ -550,16 +583,12 @@ export default function FlightSearchResults() {
                               {flight.airline} {flight.flight_number}
                             </span>
                             <span className="font-medium">
-                              $
-                              {formatPrice(
-                                flight.price,
-                                searchParams.cabin_class
-                              )}
+                              ${formatPrice(flight, searchParams.cabin_class)}
                             </span>
                           </div>
                           <div>
-                            {flight.departure_airport} ({departureInfo.time}) →{" "}
-                            {flight.arrival_airport} ({arrivalInfo.time})
+                            {flight.source} ({departureInfo.time}) →{" "}
+                            {flight.destination} ({arrivalInfo.time})
                           </div>
                           <div>{departureInfo.date}</div>
                         </div>
@@ -588,16 +617,12 @@ export default function FlightSearchResults() {
                               {flight.airline} {flight.flight_number}
                             </span>
                             <span className="font-medium">
-                              $
-                              {formatPrice(
-                                flight.price,
-                                searchParams.cabin_class
-                              )}
+                              ${formatPrice(flight, searchParams.cabin_class)}
                             </span>
                           </div>
                           <div>
-                            {flight.departure_airport} ({departureInfo.time}) →{" "}
-                            {flight.arrival_airport} ({arrivalInfo.time})
+                            {flight.source} ({departureInfo.time}) →{" "}
+                            {flight.destination} ({arrivalInfo.time})
                           </div>
                           <div>{departureInfo.date}</div>
                         </div>
@@ -613,34 +638,31 @@ export default function FlightSearchResults() {
                 <>
                   <div className="border-t border-gray-200 my-4"></div>
 
-                  <div className="flex justify-between mb-2">
-                    <span className="text-black">Total Price:</span>
-                    <span className="text-xl font-bold text-blue-600">
-                      ${calculateTotalPrice()}
-                    </span>
+                  <div className="flex justify-between font-bold text-lg">
+                    <span>Total:</span>
+                    <span>${calculateTotalPrice()}</span>
                   </div>
+
+                  <button
+                    onClick={handleBooking}
+                    disabled={!canProceed()}
+                    className={`w-full mt-6 py-3 rounded-lg text-white font-semibold ${
+                      canProceed()
+                        ? "bg-blue-600 hover:bg-blue-700"
+                        : "bg-gray-400 cursor-not-allowed"
+                    }`}
+                  >
+                    {isRoundTrip
+                      ? selectedOutboundFlight && selectedReturnFlight
+                        ? "Continue to Booking"
+                        : "Select Flights to Continue"
+                      : selectedOutboundFlight
+                      ? "Continue to Booking"
+                      : "Select Flight to Continue"}
+                  </button>
                 </>
               )}
             </div>
-
-            <Link
-              to={getBookingUrl()}
-              className={`w-full py-3 px-4 text-center font-semibold rounded-md ${
-                canProceedToBooking()
-                  ? "bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                  : "bg-gray-300 text-gray-500 cursor-not-allowed"
-              }`}
-              aria-disabled={!canProceedToBooking()}
-              onClick={(e) => !canProceedToBooking() && e.preventDefault()}
-            >
-              {isRoundTrip
-                ? selectedOutboundFlight && selectedReturnFlight
-                  ? "Continue to Booking"
-                  : "Select Both Flights to Continue"
-                : selectedOutboundFlight
-                ? "Continue to Booking"
-                : "Select a Flight to Continue"}
-            </Link>
           </div>
         </div>
       </div>
