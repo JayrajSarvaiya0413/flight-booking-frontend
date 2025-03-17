@@ -13,12 +13,6 @@
   "env": {
     "API_URL": "https://thena-flight-booking-api.onrender.com"
   },
-  "functions": {
-    "api/*.js": {
-      "memory": 1024,
-      "maxDuration": 10
-    }
-  },
   "headers": [
     {
       "source": "/(.*)",
